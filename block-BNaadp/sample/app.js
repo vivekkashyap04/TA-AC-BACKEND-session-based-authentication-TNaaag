@@ -18,6 +18,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser({ name: 'vivek', keys: 123 }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  res.cookie('name', 'vivek');
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
