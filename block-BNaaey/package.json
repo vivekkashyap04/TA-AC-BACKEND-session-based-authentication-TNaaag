@@ -1,0 +1,17 @@
+{
+  "name": "altcampus-assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "jest --passWithNoTests"
+  },
+  "author": "AltCampus",
+  "license": "GNU GPL V3",
+  "dependencies": {
+    "connect-mongo": "^4.5.0",
+    "dotenv": "^10.0.0",
+    "express-session": "^1.17.2",
+    "jest": "^26.0.1"
+  }
+}
