@@ -6,7 +6,7 @@ const productSchema = new Schema({
   quantity: Number,
   price: Number,
   likes: { type: Number, default: 0 },
-  usedId:{type:Schema.Types.ObjectId,required:true,ref:'User'}
+  userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
 });
 
 module.exports = mongoose.model('Product', productSchema);

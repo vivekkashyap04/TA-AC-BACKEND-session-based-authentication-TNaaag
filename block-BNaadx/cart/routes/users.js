@@ -2,25 +2,41 @@ var express = require('express');
 var router = express.Router();
 
 const User = require('../models/user');
+const Product = require('../models/product');
 
+console.log('inside users route');
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   console.log(req.session);
   User.findOne({ _id: req.session.userId }, (err, user) => {
-    if (err) return next(err);
-    res.render('dashboard', { user });
+    if (user.isAdmin) {
+      Product.find({ userId: user._id }, (err, data) => {
+        console.log(data);
+        if (err) return next(err);
+        res.render('dashboard', { user, data });
+      });
+    } else {
+      Product.find({}, (err, data) => {
+        console.log(data);
+        if (err) return next(err);
+        res.render('dashboard', { user, data });
+      });
+    }
   });
 });
 
 //register
 
 router.get('/register', function (req, res, next) {
+  console.log(req.body, 'user register');
   var error = req.flash('error')[0];
-  res.render('register', { error });
+  res.render('registration', { error });
+  // if (next) return next(err);
 });
 
 router.post('/register', function (req, res, next) {
   var { email, password } = req.body;
+  req.body.role = req.body.role.toLowerCase().trim();
   if (password < 5) {
     req.flash('error', 'password is too short');
     res.redirect('/users/register');
@@ -51,6 +67,7 @@ router.post('/login', function (req, res, next) {
     return res.redirect('/users/login');
   }
   User.findOne({ email }, (err, user) => {
+    console.log(user);
     if (!user) {
       req.flash('error', 'user have to register first');
       return res.redirect('/users/login');
@@ -62,6 +79,7 @@ router.post('/login', function (req, res, next) {
         res.redirect('/users/login');
       }
       req.session.userId = user._id;
+      req.session.isAdmin = user.isAdmin;
       res.redirect('/users');
     });
   });
